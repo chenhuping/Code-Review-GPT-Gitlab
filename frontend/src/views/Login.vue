@@ -113,10 +113,7 @@ const handleLogin = async () => {
   loading.value = true
 
   try {
-    // 模拟网络延迟
-    await new Promise(resolve => setTimeout(resolve, 500))
-
-    const success = authStore.login(formData.username, formData.password)
+    const success = await authStore.login(formData.username, formData.password)
 
     if (success) {
       // 登录成功，跳转到项目列表页

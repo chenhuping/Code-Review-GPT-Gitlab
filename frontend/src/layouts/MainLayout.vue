@@ -271,8 +271,8 @@ const handleLogout = () => {
   showLogoutModal.value = true
 }
 
-const confirmLogout = () => {
-  authStore.logout()
+const confirmLogout = async () => {
+  await authStore.logout()
   showLogoutModal.value = false
   router.push('/login')
 }

@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'apps.review',
     'apps.response',
     'apps.llm',
+    'apps.api_auth',
 ]
 
 MIDDLEWARE = [

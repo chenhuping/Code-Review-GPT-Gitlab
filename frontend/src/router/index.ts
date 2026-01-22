@@ -79,9 +79,11 @@ const router = createRouter({
 })
 
 // 路由守卫
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
-  authStore.checkAuth()
+
+  // 异步检查认证状态
+  await authStore.checkAuth()
 
   // 如果路由需要认证且用户未登录，跳转到登录页
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
