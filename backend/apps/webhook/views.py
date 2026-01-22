@@ -6,7 +6,8 @@ import time
 from django.utils import timezone
 from django.db import models, transaction
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import WebhookLog, MergeRequestReview, Project, ProjectNotificationSetting
@@ -849,6 +850,7 @@ def build_code_context(changes):
 # ==================== Project Management APIs ====================
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def list_projects(request):
     """
     List all projects with enhanced statistics
@@ -905,6 +907,7 @@ def list_projects(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_project(request, project_id):
     """
     Get project details with comprehensive statistics by GitLab project ID
@@ -938,6 +941,7 @@ def get_project(request, project_id):
 
 
 @api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
 def update_project(request, project_id):
     """
     Update project settings
@@ -983,6 +987,7 @@ def update_project(request, project_id):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_project_notifications(request, project_id):
     """获取项目已启用的通知通道"""
     try:
@@ -1015,6 +1020,7 @@ def get_project_notifications(request, project_id):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def update_project_notifications(request, project_id):
     """更新项目通知通道选择"""
     try:
@@ -1069,6 +1075,7 @@ def update_project_notifications(request, project_id):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_project_webhook_events(request, project_id):
     """获取项目启用的webhook事件规则ID列表"""
     try:
@@ -1113,6 +1120,7 @@ def get_project_webhook_events(request, project_id):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def update_project_webhook_events(request, project_id):
     """更新项目启用的webhook事件规则"""
     try:
@@ -1148,6 +1156,7 @@ def update_project_webhook_events(request, project_id):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_project_webhook_event_prompts(request, project_id):
     """
     获取项目的所有 Webhook 事件 Prompt 配置
@@ -1230,6 +1239,7 @@ def get_project_webhook_event_prompts(request, project_id):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def update_project_webhook_event_prompt(request, project_id):
     """
     更新项目的单个 Webhook 事件 Prompt 配置
@@ -1289,6 +1299,7 @@ def update_project_webhook_event_prompt(request, project_id):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def enable_project_review(request, project_id):
     """
     Enable code review for a project
@@ -1317,6 +1328,7 @@ def enable_project_review(request, project_id):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def disable_project_review(request, project_id):
     """
     Disable code review for a project
@@ -1345,6 +1357,7 @@ def disable_project_review(request, project_id):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def project_stats(request):
     """
     Get comprehensive project statistics
@@ -1366,6 +1379,7 @@ def project_stats(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def project_webhook_logs(request, project_id):
     """
     Get webhook logs for a specific project
@@ -1408,6 +1422,7 @@ def project_webhook_logs(request, project_id):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def project_review_history(request, project_id):
     """
     Get review history for a specific project
@@ -1455,6 +1470,7 @@ def project_review_history(request, project_id):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def list_reviews(request):
     """
     Get list of merge request reviews with filtering and pagination
@@ -1555,6 +1571,7 @@ def list_reviews(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def list_logs(request):
     """
     Get list of webhook logs with filtering and pagination
@@ -1711,6 +1728,7 @@ def list_logs(request):
 # ==================== Mock APIs for Testing ====================
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def mock_reviews(request):
     """
     Mock API for reviews - returns sample review data for frontend testing
@@ -1791,6 +1809,7 @@ def mock_reviews(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def mock_logs(request):
     """
     Mock API for logs - returns sample webhook log data for frontend testing
@@ -1896,6 +1915,7 @@ def mock_logs(request):
         )
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_webhook_url(request):
     """
     获取系统的 Webhook URL，自动检测内网和外网地址

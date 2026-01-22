@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 import logging
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 class LLMConfigViewSet(viewsets.ModelViewSet):
     """LLM配置管理API"""
     serializer_class = LLMConfigSerializer
-    permission_classes = [AllowAny]  # 临时允许所有访问，生产环境应该使用IsAuthenticated
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return LLMConfig.objects.all()
@@ -54,7 +54,7 @@ class LLMConfigViewSet(viewsets.ModelViewSet):
 class GitLabConfigViewSet(viewsets.ModelViewSet):
     """GitLab配置管理API"""
     serializer_class = GitLabConfigSerializer
-    permission_classes = [AllowAny]  # 临时允许所有访问，生产环境应该使用IsAuthenticated
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return GitLabConfig.objects.all()
@@ -83,7 +83,7 @@ class GitLabConfigViewSet(viewsets.ModelViewSet):
 class NotificationConfigViewSet(viewsets.ModelViewSet):
     """通知配置管理API"""
     serializer_class = NotificationConfigSerializer
-    permission_classes = [AllowAny]  # 临时允许所有访问，生产环境应该使用IsAuthenticated
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return NotificationConfig.objects.all()
@@ -124,7 +124,7 @@ class NotificationConfigViewSet(viewsets.ModelViewSet):
 class NotificationChannelViewSet(viewsets.ModelViewSet):
     """通知渠道管理API"""
     serializer_class = NotificationChannelSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = NotificationChannel.objects.all()
@@ -496,7 +496,7 @@ Code Review GPT 自动发送
 class WebhookEventRuleViewSet(viewsets.ModelViewSet):
     """Webhook事件规则管理API"""
     serializer_class = WebhookEventRuleSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return WebhookEventRule.objects.all().order_by('name')
@@ -753,7 +753,7 @@ class WebhookEventRuleViewSet(viewsets.ModelViewSet):
 
 class ConfigViewSet(viewsets.GenericViewSet):
     """配置统一管理API"""
-    permission_classes = [AllowAny]  # 临时允许所有访问，生产环境应该使用IsAuthenticated
+    permission_classes = [IsAuthenticated]
 
     @action(detail=False, methods=['get'])
     def summary(self, request):

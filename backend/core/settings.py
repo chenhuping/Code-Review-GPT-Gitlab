@@ -129,6 +129,10 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'core.exceptions.custom_exception_handler',
     # 时区设置：使用本地时区（Asia/Shanghai）而不是 UTC
     'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',  # 返回格式化的本地时间
+    # 认证配置：使用自定义的 Cookie Token 认证
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'utils.authentication.CookieTokenAuthentication',
+    ],
 }
 
 # CORS settings

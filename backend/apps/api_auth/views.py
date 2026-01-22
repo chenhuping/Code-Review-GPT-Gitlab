@@ -3,6 +3,7 @@
 """
 import os
 import secrets
+from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -66,8 +67,8 @@ def login(request):
                 value=token,
                 max_age=TOKEN_EXPIRE_SECONDS,  # Cookie 过期时间
                 httponly=True,  # 防止 JavaScript 访问
-                secure=False,  # 生产环境应设置为 True（需要 HTTPS）
-                samesite='Lax'  # 防止 CSRF 攻击
+                secure=not settings.DEBUG,
+                samesite='Strict'
             )
 
             return response
