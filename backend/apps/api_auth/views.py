@@ -29,8 +29,14 @@ def login(request):
         password = data.get('password', '').strip()
 
         # 从环境变量读取配置的账号密码
-        default_username = os.environ.get('DEFAULT_USERNAME', 'admin')
-        default_password = os.environ.get('DEFAULT_PASSWORD', 'admin123')
+        default_username = os.environ.get('DEFAULT_USERNAME', '')
+        default_password = os.environ.get('DEFAULT_PASSWORD', '')
+
+        if not default_username or not default_password:
+            return JsonResponse({
+                'success': False,
+                'message': '服务端未配置登录凭据'
+            }, status=500)
 
         # 验证账号密码
         if username == default_username and password == default_password:
@@ -38,7 +44,11 @@ def login(request):
             token = secrets.token_urlsafe(32)
 
             # 将 token 存储到 Redis，设置过期时间
-            redis_client.set_token(token, username, TOKEN_EXPIRE_SECONDS)
+            if not redis_client.set_token(token, username, TOKEN_EXPIRE_SECONDS):
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Token 存储失败'
+                }, status=503)
 
             # 创建响应
             response = JsonResponse({

@@ -32,9 +32,7 @@ class RedisClient:
                 print(f"✓ Redis 连接成功: {redis_url}")
             except Exception as e:
                 print(f"✗ Redis 连接失败: {e}")
-                print("  将使用内存存储（仅用于开发环境）")
-                self._client = None
-                self._memory_store = {}
+                raise RuntimeError(f"Redis 连接失败，认证功能需要 Redis 支持: {redis_url}") from e
 
     def get_client(self):
         """获取 Redis 客户端"""
@@ -49,15 +47,11 @@ class RedisClient:
         :return: 是否成功
         """
         try:
-            if self._client:
-                self._client.setex(
-                    f"auth_token:{token}",
-                    expire_seconds,
-                    username
-                )
-            else:
-                # 内存存储（仅用于开发）
-                self._memory_store[f"auth_token:{token}"] = username
+            self._client.setex(
+                f"auth_token:{token}",
+                expire_seconds,
+                username
+            )
             return True
         except Exception as e:
             print(f"存储 token 失败: {e}")
@@ -70,12 +64,8 @@ class RedisClient:
         :return: 用户名，如果不存在或已过期返回 None
         """
         try:
-            if self._client:
-                username = self._client.get(f"auth_token:{token}")
-                return username
-            else:
-                # 内存存储（仅用于开发）
-                return self._memory_store.get(f"auth_token:{token}")
+            username = self._client.get(f"auth_token:{token}")
+            return username
         except Exception as e:
             print(f"获取 token 失败: {e}")
             return None
@@ -87,11 +77,7 @@ class RedisClient:
         :return: 是否成功
         """
         try:
-            if self._client:
-                self._client.delete(f"auth_token:{token}")
-            else:
-                # 内存存储（仅用于开发）
-                self._memory_store.pop(f"auth_token:{token}", None)
+            self._client.delete(f"auth_token:{token}")
             return True
         except Exception as e:
             print(f"删除 token 失败: {e}")
@@ -105,11 +91,7 @@ class RedisClient:
         :return: 是否成功
         """
         try:
-            if self._client:
-                return self._client.expire(f"auth_token:{token}", expire_seconds)
-            else:
-                # 内存存储不支持过期时间刷新
-                return True
+            return self._client.expire(f"auth_token:{token}", expire_seconds)
         except Exception as e:
             print(f"刷新 token 失败: {e}")
             return False
