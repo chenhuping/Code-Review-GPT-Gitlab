@@ -1,6 +1,7 @@
 import axios from 'axios'
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { API_CONFIG } from '@/config/api'
+import router from '@/router'
 
 const service: AxiosInstance = axios.create({
   timeout: API_CONFIG.TIMEOUT,
@@ -10,7 +11,11 @@ const service: AxiosInstance = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   (config) => {
-    // 可以在这里添加token等
+    // 添加认证 token
+    const token = localStorage.getItem('auth_token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
     return config
   },
   (error) => {
@@ -39,7 +44,11 @@ service.interceptors.response.use(
       const { status } = error.response
       switch (status) {
         case 401:
-          alert('未授权，请重新登录')
+          // 未授权，清除登录状态并跳转到登录页
+          localStorage.removeItem('auth_token')
+          localStorage.removeItem('username')
+          router.push('/login')
+          alert('登录已过期，请重新登录')
           break
         case 403:
           alert('拒绝访问')
